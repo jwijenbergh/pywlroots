@@ -14,7 +14,7 @@ from .data_device_manager import Drag
 from .input_device import ButtonState
 from .keyboard import Keyboard, KeyboardKeyEvent, KeyboardModifiers
 from .pointer import AxisOrientation, AxisSource
-from .surface import Surface
+from .compositor import Surface
 
 _weakkeydict: WeakKeyDictionary = WeakKeyDictionary()
 

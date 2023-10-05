@@ -2609,7 +2609,7 @@ struct wlr_xdg_popup {
     struct wl_list link;
 
     struct wl_resource *resource;
-    bool committed;
+    bool sent_initial_configure;
     struct wlr_surface *parent;
     struct wlr_seat *seat;
 

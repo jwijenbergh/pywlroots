@@ -2675,6 +2675,7 @@ struct wlr_xdg_surface {
     struct wlr_surface *surface;
     struct wl_list link; // wlr_xdg_client::surfaces
     enum wlr_xdg_surface_role role;
+    struct wl_resource *role_resource;
 
     union {
         struct wlr_xdg_toplevel *toplevel;
@@ -2689,8 +2690,6 @@ struct wlr_xdg_surface {
     struct wl_list configure_list;
 
     struct wlr_xdg_surface_state current, pending;
-
-    struct wl_listener surface_commit;
 
     struct {
         struct wl_signal destroy;

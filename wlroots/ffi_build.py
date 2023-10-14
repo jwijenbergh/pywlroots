@@ -3180,7 +3180,7 @@ ffi_builder = FFI()
 ffi_builder.set_source(
     "wlroots._ffi",
     SOURCE,
-    libraries=["wlroots"],
+    libraries=["scenefx", "wlroots"],
     define_macros=[("WLR_USE_UNSTABLE", None)],
     include_dirs=["/usr/include/pixman-1", include_dir],
 )

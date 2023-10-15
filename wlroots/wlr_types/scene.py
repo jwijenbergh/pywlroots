@@ -186,6 +186,9 @@ class SceneBuffer(Ptr):
     def set_corner_radius(self, radii: int) -> None:
         lib.wlr_scene_buffer_set_corner_radius(self._ptr, radii)
 
+    def set_opacity(self, opacity: float) -> None:
+        lib.wlr_scene_buffer_set_opacity(self._ptr, opacity)
+
 
 T = TypeVar("T")
 BufferCallback = Callable[[SceneBuffer, int, int, T], None]

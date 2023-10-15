@@ -1891,6 +1891,9 @@ void wlr_scene_buffer_set_dest_size(struct wlr_scene_buffer *scene_buffer,
 void wlr_scene_buffer_set_transform(struct wlr_scene_buffer *scene_buffer,
     enum wl_output_transform transform);
 
+void wlr_scene_buffer_set_opacity(struct wlr_scene_buffer *scene_buffer,
+    float opacity);
+
 void wlr_scene_buffer_set_corner_radius(struct wlr_scene_buffer *scene_buffer,
     int radii);
 

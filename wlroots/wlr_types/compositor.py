@@ -72,6 +72,10 @@ class Surface(PtrHasData):
         return lib.wlr_surface_is_xwayland_surface(self._ptr)
 
     @property
+    def is_subsurface(self) -> bool:
+        return lib.wlr_surface_is_subsurface(self._ptr)
+
+    @property
     def sx(self) -> int:
         """Surface local buffer x position"""
         return self._ptr.sx

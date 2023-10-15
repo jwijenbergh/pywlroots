@@ -186,6 +186,17 @@ class SceneBuffer(Ptr):
     def set_corner_radius(self, radii: int) -> None:
         lib.wlr_scene_buffer_set_corner_radius(self._ptr, radii)
 
+    def set_shadow_data(self, color: ffi.CData | None, blur_sigma: int) -> None:
+        shadow_data = lib.shadow_data_get_default()
+        shadow_data.enabled = 1
+        ffi.memmove(shadow_data.color, color, ffi.sizeof("float[4]"))
+        shadow_data.blur_sigma = blur_sigma
+        lib.wlr_scene_buffer_set_shadow_data(self._ptr, shadow_data)
+
+    def unset_shadow_data(self) -> None:
+        default_data = lib.shadow_data_get_default()
+        lib.wlr_scene_buffer_set_shadow_data(self._ptr, default_data)
+
     def set_opacity(self, opacity: float) -> None:
         lib.wlr_scene_buffer_set_opacity(self._ptr, opacity)
 

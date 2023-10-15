@@ -11,6 +11,7 @@ from pywayland.ffi_build import ffi_builder as pywayland_ffi
 from xkbcommon.ffi_build import ffibuilder as xkb_ffi
 
 include_dir = (Path(__file__).parent / "include").resolve()
+scenefx_include = (Path(__file__).parent / "scenefx" / "include").resolve()
 assert include_dir.is_dir(), f"missing {include_dir}"
 
 
@@ -1891,6 +1892,17 @@ void wlr_scene_buffer_set_dest_size(struct wlr_scene_buffer *scene_buffer,
 void wlr_scene_buffer_set_transform(struct wlr_scene_buffer *scene_buffer,
     enum wl_output_transform transform);
 
+struct shadow_data {
+	bool enabled;
+	float *color;
+	float blur_sigma;
+        ...;
+};
+
+struct shadow_data shadow_data_get_default(void);
+
+void wlr_scene_buffer_set_shadow_data(struct wlr_scene_buffer *scene_buffer, struct shadow_data shadow_data);
+
 void wlr_scene_buffer_set_opacity(struct wlr_scene_buffer *scene_buffer,
     float opacity);
 
@@ -3188,7 +3200,7 @@ ffi_builder.set_source(
     SOURCE,
     libraries=["scenefx", "wlroots"],
     define_macros=[("WLR_USE_UNSTABLE", None)],
-    include_dirs=["/usr/include/pixman-1", include_dir],
+    include_dirs=["/usr/include/pixman-1", include_dir, scenefx_include],
 )
 ffi_builder.include(pywayland_ffi)
 ffi_builder.include(xkb_ffi)

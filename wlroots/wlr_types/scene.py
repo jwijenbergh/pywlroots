@@ -170,6 +170,9 @@ class SceneBuffer(Ptr):
         region_ptr = region._ptr if region else ffi.NULL
         lib.wlr_scene_buffer_set_buffer_with_damage(self._ptr, buffer_ptr, region_ptr)
 
+    def set_corner_radius(self, radii: int) -> None:
+        lib.wlr_scene_buffer_set_corner_radius(self._ptr, radii)
+
 
 T = TypeVar("T")
 BufferCallback = Callable[[SceneBuffer, int, int, T], None]

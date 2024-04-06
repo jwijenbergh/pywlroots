@@ -724,6 +724,22 @@ void wlr_foreign_toplevel_handle_v1_set_parent(
     struct wlr_foreign_toplevel_handle_v1 *parent);
 """
 
+# types/wlr_fractional_scale_v1.h
+CDEF += """
+struct wlr_fractional_scale_manager_v1 {
+	struct wl_global *global;
+
+	struct {
+		struct wl_signal destroy;
+	} events;
+
+        ...;
+};
+
+struct wlr_fractional_scale_manager_v1 *wlr_fractional_scale_manager_v1_create(
+		struct wl_display *display, uint32_t version);
+"""
+
 # types/wlr_gamma_control_v1.h
 CDEF += """
 struct wlr_gamma_control_manager_v1 {
@@ -2708,6 +2724,7 @@ SOURCE = """
 #include <wlr/types/wlr_export_dmabuf_v1.h>
 #include <wlr/types/wlr_viewporter.h>
 #include <wlr/types/wlr_foreign_toplevel_management_v1.h>
+#include <wlr/types/wlr_fractional_scale_v1.h>
 #include <wlr/types/wlr_gamma_control_v1.h>
 #include <wlr/types/wlr_idle_inhibit_v1.h>
 #include <wlr/types/wlr_idle_notify_v1.h>

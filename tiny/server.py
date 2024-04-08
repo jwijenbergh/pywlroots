@@ -351,13 +351,15 @@ class TinywlServer:
     def server_new_output(self, listener, output: Output) -> None:
         SceneOutput.create(self._scene, output)
         output.init_render(self._allocator, self._renderer)
-
+        
         state = OutputState()
-        state.set_enabled()
+        state.enabled = True
         if mode := output.preferred_mode():
-            state.set_mode(mode)
+            state.mode = mode
+        state.mode = output.preferred_mode()
+        state.adaptive_sync_enabled = True  # Will be disabled if unsupported
 
-        output.commit_state(state)
+        output.commit(state)
         state.finish()
 
         self.outputs.append(output)

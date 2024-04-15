@@ -356,7 +356,6 @@ class TinywlServer:
         state.enabled = True
         if mode := output.preferred_mode():
             state.mode = mode
-        state.adaptive_sync_enabled = True  # Will be disabled if unsupported
 
         output.commit(state)
         state.finish()

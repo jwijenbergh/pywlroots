@@ -9,6 +9,7 @@ import tempfile
 INCLUDE_PATH = pathlib.Path(__file__).parent / "wlroots" / "include"
 WAYLAND_PROCOTOLS = [
     "stable/xdg-shell/xdg-shell.xml",
+    "staging/tearing-control/tearing-control-v1.xml",
     "unstable/idle-inhibit/idle-inhibit-unstable-v1.xml",
     "unstable/pointer-constraints/pointer-constraints-unstable-v1.xml",
 ]

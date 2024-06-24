@@ -775,6 +775,56 @@ struct wlr_gamma_control_manager_v1 *wlr_gamma_control_manager_v1_create(
     struct wl_display *display);
 """
 
+# types/wlr_tearing_control_v1.h
+CDEF += """
+struct wlr_tearing_control_v1 {
+	uint32_t hint;
+	struct wl_client *client;
+	struct wl_list link;
+	struct wl_resource *resource;
+
+	struct {
+		struct wl_signal set_hint;
+		struct wl_signal destroy;
+	} events;
+
+	struct wlr_surface *surface;
+
+	struct wlr_addon addon;
+};
+
+struct wlr_tearing_control_manager_v1 {
+	struct wl_global *global;
+
+	struct wl_list surface_hints;  // wlr_tearing_control_v1.link
+
+	struct wl_listener display_destroy;
+	struct {
+		struct wl_signal new_object;  // struct wlr_tearing_control_v1*
+		struct wl_signal destroy;
+	} events;
+
+	void *data;
+};
+
+struct wlr_tearing_control_manager_v1 *wlr_tearing_control_manager_v1_create(
+	struct wl_display *display, uint32_t version);
+
+enum wp_tearing_control_v1_presentation_hint {
+    WP_TEARING_CONTROL_V1_PRESENTATION_HINT_VSYNC,
+    WP_TEARING_CONTROL_V1_PRESENTATION_HINT_ASYNC,
+    ...
+};
+
+/**
+ * Returns the tearing hint for a given surface
+ */
+enum wp_tearing_control_v1_presentation_hint
+wlr_tearing_control_manager_v1_surface_hint_from_surface(
+	struct wlr_tearing_control_manager_v1 *manager,
+	struct wlr_surface *surface);
+"""
+
 # types/wlr_input_inhibit_v1.h
 CDEF += """
 struct wlr_idle_inhibit_manager_v1 {
@@ -1041,6 +1091,7 @@ struct wlr_output_state {
     uint32_t render_format;
     enum wl_output_subpixel subpixel;
     struct wlr_output_mode *mode;
+    bool tearing_page_flip;
     struct {
         int32_t width, height;
         int32_t refresh; // mHz, may be zero
@@ -1872,6 +1923,9 @@ void wlr_scene_buffer_set_opacity(struct wlr_scene_buffer *scene_buffer,
 
 struct wlr_scene_output *wlr_scene_output_create(struct wlr_scene *scene,
     struct wlr_output *output);
+
+bool wlr_scene_output_build_state(struct wlr_scene_output *scene_output,
+	struct wlr_output_state *state, const struct wlr_scene_output_state_options *options);
 
 void wlr_scene_output_destroy(struct wlr_scene_output *scene_output);
 
@@ -3014,6 +3068,7 @@ SOURCE = """
 #include <wlr/types/wlr_session_lock_v1.h>
 #include <wlr/types/wlr_single_pixel_buffer_v1.h>
 #include <wlr/types/wlr_switch.h>
+#include <wlr/types/wlr_tearing_control_v1.h>
 #include <wlr/types/wlr_touch.h>
 #include <wlr/types/wlr_virtual_keyboard_v1.h>
 #include <wlr/types/wlr_virtual_pointer_v1.h>

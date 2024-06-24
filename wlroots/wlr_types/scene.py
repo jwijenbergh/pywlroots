@@ -100,6 +100,12 @@ class SceneOutput(Ptr):
         """
         return cls(lib.wlr_scene_output_create(scene._ptr, output._ptr))
 
+    def build_state(self, output_state: OutputState | None, options: SceneOutputStateOptions | None = None) -> bool:
+        output_state_ptr = output_state._ptr if output_state is not None else ffi.NULL
+        options_ptr = options._ptr if options is not None else ffi.NULL
+
+        return lib.wlr_scene_output_build_state(self._ptr, output_state_ptr, options_ptr)
+
     def commit(self, options: SceneOutputStateOptions | None = None) -> bool:
         """Render and commit an output."""
         options_ptr = options._ptr if options is not None else ffi.NULL

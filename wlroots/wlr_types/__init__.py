@@ -49,6 +49,7 @@ from .scene import (  # noqa: F401
 from .screencopy_v1 import ScreencopyManagerV1  # noqa: F401
 from .seat import Seat  # noqa: F401
 from .texture import Texture  # noqa: F401
+from .tearing_control_manager_v1 import TearingControlManagerV1, WpTearingControlV1PresentationHint
 from .viewporter import Viewporter  # noqa: F401
 from .virtual_keyboard_v1 import VirtualKeyboardManagerV1  # noqa: F401
 from .virtual_pointer_v1 import VirtualPointerManagerV1  # noqa: F401

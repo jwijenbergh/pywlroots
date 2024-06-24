@@ -408,6 +408,14 @@ class OutputState(Ptr):
             self._ptr, mode.width, mode.height, mode.refresh
         )
 
+    @property
+    def tearing_page_flip(self) -> bool:
+        return self._ptr.tearing_page_flip
+
+    @tearing_page_flip.setter
+    def tearing_page_flip(self, do_tear: bool) -> None:
+        self._ptr.tearing_page_flip = do_tear
+
     def finish(self) -> None:
         lib.wlr_output_state_finish(self._ptr)
 

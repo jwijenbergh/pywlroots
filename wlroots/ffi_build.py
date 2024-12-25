@@ -1182,7 +1182,10 @@ void wlr_output_state_set_subpixel(struct wlr_output_state *state,
 
 void wlr_output_render_software_cursors(struct wlr_output *output,
     struct pixman_region32 *damage);
+"""
 
+# util/transform.h
+CDEF += """
 enum wl_output_transform wlr_output_transform_invert(
     enum wl_output_transform tr);
 
@@ -3034,6 +3037,7 @@ SOURCE = """
 #include <wlr/util/box.h>
 #include <wlr/util/log.h>
 #include <wlr/util/region.h>
+#include <wlr/util/transform.h>
 #include <wlr/version.h>
 
 #include <xkbcommon/xkbcommon.h>

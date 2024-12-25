@@ -1384,27 +1384,16 @@ struct wlr_pointer_button_event {
     struct wlr_pointer *pointer;
     uint32_t time_msec;
     uint32_t button;
-    enum wlr_button_state state;
+    enum wl_pointer_button_state state;
     ...;
-};
-
-enum wlr_axis_source {
-    WLR_AXIS_SOURCE_WHEEL,
-    WLR_AXIS_SOURCE_FINGER,
-    WLR_AXIS_SOURCE_CONTINUOUS,
-    WLR_AXIS_SOURCE_WHEEL_TILT,
-};
-
-enum wlr_axis_orientation {
-    WLR_AXIS_ORIENTATION_VERTICAL,
-    WLR_AXIS_ORIENTATION_HORIZONTAL,
 };
 
 struct wlr_pointer_axis_event {
     struct wlr_pointer *pointer;
     uint32_t time_msec;
-    enum wlr_axis_source source;
-    enum wlr_axis_orientation orientation;
+    enum wl_pointer_axis_source source;
+    enum wl_pointer_axis orientation;
+    enum wl_pointer_axis_relative_direction relative_direction;
     double delta;
     int32_t delta_discrete;
     ...;
@@ -2138,10 +2127,8 @@ void wlr_seat_pointer_notify_enter(struct wlr_seat *wlr_seat,
 void wlr_seat_pointer_notify_motion(struct wlr_seat *wlr_seat,
     uint32_t time_msec, double sx, double sy);
 uint32_t wlr_seat_pointer_notify_button(struct wlr_seat *wlr_seat,
-    uint32_t time_msec, uint32_t button, enum wlr_button_state state);
-void wlr_seat_pointer_notify_axis(struct wlr_seat *wlr_seat, uint32_t time_msec,
-    enum wlr_axis_orientation orientation, double value,
-    int32_t value_discrete, enum wlr_axis_source source);
+    uint32_t time_msec, uint32_t button, enum wl_pointer_button_state state);
+void wlr_seat_pointer_notify_axis(struct wlr_seat *wlr_seat, uint32_t time_msec, enum wl_pointer_axis orientation, double value, int32_t value_discrete, enum wl_pointer_axis_source source, enum wl_pointer_axis_relative_direction relative_direction);
 void wlr_seat_pointer_notify_frame(struct wlr_seat *wlr_seat);
 bool wlr_seat_pointer_has_grab(struct wlr_seat *seat);
 

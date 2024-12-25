@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Iterator
 from weakref import WeakKeyDictionary
 
-from pywayland.protocol.wayland import WlSeat
+from pywayland.protocol.wayland import WlPointer, WlSeat
 from pywayland.server import Display, Signal
 from pywayland.utils import wl_list_for_each
 
@@ -13,9 +13,7 @@ from wlroots import Ptr, PtrHasData, ffi, instance_or_none, lib, ptr_or_null
 
 from .compositor import Surface
 from .data_device_manager import Drag
-from .input_device import ButtonState
 from .keyboard import Keyboard, KeyboardKeyEvent, KeyboardModifiers
-from .pointer import AxisOrientation, AxisSource
 
 _weakkeydict: WeakKeyDictionary = WeakKeyDictionary()
 
@@ -193,7 +191,7 @@ class Seat(PtrHasData):
         lib.wlr_seat_pointer_notify_motion(self._ptr, time_msec, surface_x, surface_y)
 
     def pointer_notify_button(
-        self, time_msec: int, button: int, button_state: ButtonState
+        self, time_msec: int, button: int, button_state: WlPointer.button_state
     ) -> int:
         """Notify the seat that a button has been pressed
 
@@ -207,14 +205,15 @@ class Seat(PtrHasData):
     def pointer_notify_axis(
         self,
         time_msec: int,
-        orientation: AxisOrientation,
+        orientation: WlPointer.axis,
         value: float,
         value_discrete: int,
-        source: AxisSource,
+        source: WlPointer.axis_source,
+        relative_direction: WlPointer.axis_relative_direction,
     ) -> None:
         """Notify the seat of an axis event"""
         lib.wlr_seat_pointer_notify_axis(
-            self._ptr, time_msec, orientation.value, value, value_discrete, source.value
+            self._ptr, time_msec, orientation.value, value, value_discrete, source.value, relative_direction.value
         )
 
     def pointer_notify_frame(self) -> None:

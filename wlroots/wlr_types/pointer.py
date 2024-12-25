@@ -3,7 +3,8 @@
 
 from __future__ import annotations
 
-import enum
+from pywayland.protocol.wayland import WlPointer
+
 from weakref import WeakKeyDictionary
 
 from wlroots import Ptr, PtrHasData, ffi, lib, str_or_none
@@ -11,20 +12,6 @@ from wlroots import Ptr, PtrHasData, ffi, lib, str_or_none
 from .input_device import ButtonState, InputDevice
 
 _weakkeydict: WeakKeyDictionary = WeakKeyDictionary()
-
-
-@enum.unique
-class AxisSource(enum.IntEnum):
-    WHEEL = lib.WLR_AXIS_SOURCE_WHEEL
-    FINGER = lib.WLR_AXIS_SOURCE_FINGER
-    CONTINUOUS = lib.WLR_AXIS_SOURCE_CONTINUOUS
-    WHEEL_TILT = lib.WLR_AXIS_SOURCE_WHEEL_TILT
-
-
-@enum.unique
-class AxisOrientation(enum.IntEnum):
-    VERTICAL = lib.WLR_AXIS_ORIENTATION_VERTICAL
-    HORIZONTAL = lib.WLR_AXIS_ORIENTATION_HORIZONTAL
 
 
 class Pointer(PtrHasData):
@@ -114,12 +101,12 @@ class PointerAxisEvent(_PointerEvent):
         self._ptr = ffi.cast("struct wlr_pointer_axis_event *", ptr)
 
     @property
-    def source(self) -> AxisSource:
-        return AxisSource(self._ptr.source)
+    def source(self) -> WlPointer.axis_source:
+        return WlPointer.axis_source(self._ptr.source)
 
     @property
-    def orientation(self) -> AxisOrientation:
-        return AxisOrientation(self._ptr.orientation)
+    def orientation(self) -> WlPointer.axis:
+        return WlPointer.axis(self._ptr.orientation)
 
     @property
     def delta(self) -> float:

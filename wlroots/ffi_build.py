@@ -1058,7 +1058,7 @@ struct wlr_output_state {
 struct wlr_output {
     const struct wlr_output_impl *impl;
     struct wlr_backend *backend;
-    struct wl_display *display;
+    struct wl_event_loop *event_loop;
 
     struct wl_global *global;
     struct wl_list resources;

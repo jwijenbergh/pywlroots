@@ -1718,7 +1718,6 @@ struct wlr_scene_tree {
 struct wlr_scene {
     struct wlr_scene_tree tree;
     struct wl_list outputs;
-    struct wlr_presentation *presentation;
     ...;
 };
 
@@ -1804,9 +1803,6 @@ struct wlr_scene_node *wlr_scene_node_at(struct wlr_scene_node *node,
     double lx, double ly, double *nx, double *ny);
 
 struct wlr_scene *wlr_scene_create(void);
-
-void wlr_scene_set_presentation(struct wlr_scene *scene,
-    struct wlr_presentation *presentation);
 
 struct wlr_scene_tree *wlr_scene_tree_create(struct wlr_scene_tree *parent);
 

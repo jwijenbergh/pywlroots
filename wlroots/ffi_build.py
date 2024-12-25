@@ -2530,9 +2530,6 @@ struct wlr_xdg_toplevel_decoration_v1 {
 
     enum wlr_xdg_toplevel_decoration_v1_mode scheduled_mode;
     enum wlr_xdg_toplevel_decoration_v1_mode requested_mode;
-
-    bool added;
-
     struct wl_list configure_list; // wlr_xdg_toplevel_decoration_v1_configure::link
 
     struct {
@@ -2540,7 +2537,7 @@ struct wlr_xdg_toplevel_decoration_v1 {
         struct wl_signal request_mode;
     } events;
 
-    struct wl_listener surface_destroy;
+    struct wl_listener toplevel_destroy;
     struct wl_listener surface_configure;
     struct wl_listener surface_ack_configure;
     struct wl_listener surface_commit;
@@ -2604,6 +2601,8 @@ struct wlr_xdg_shell {
 
     struct {
         struct wl_signal new_surface;
+        struct wl_signal new_toplevel;
+        struct wl_signal new_popup;
         struct wl_signal destroy;
     } events;
 
@@ -2678,6 +2677,8 @@ struct wlr_xdg_popup {
     struct wlr_xdg_popup_state current, pending;
 
     struct {
+        struct wl_signal destroy;
+
         struct wl_signal reposition;
     } events;
 
@@ -2728,6 +2729,7 @@ struct wlr_xdg_toplevel {
     char *app_id;
 
     struct {
+        struct wl_signal destroy;
         struct wl_signal request_maximize;
         struct wl_signal request_fullscreen;
         struct wl_signal request_minimize;
@@ -2770,7 +2772,7 @@ struct wlr_xdg_surface {
 
     struct wl_list popups; // wlr_xdg_popup::link
 
-    bool added, configured;
+    bool configured;
     struct wl_event_source *configure_idle;
     uint32_t scheduled_serial;
     struct wl_list configure_list;

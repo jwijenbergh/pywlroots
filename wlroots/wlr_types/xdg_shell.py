@@ -54,6 +54,12 @@ class XdgShell(PtrHasData):
         self.new_surface_event = Signal(
             ptr=ffi.addressof(self._ptr.events.new_surface), data_wrapper=XdgSurface
         )
+        self.new_toplevel_event = Signal(
+            ptr=ffi.addressof(self._ptr.events.new_toplevel), data_wrapper=XdgSurface
+        )
+        self.new_popup_event = Signal(
+            ptr=ffi.addressof(self._ptr.events.new_popup), data_wrapper=XdgSurface
+        )
         self.destroy_event = Signal(ptr=ffi.addressof(self._ptr.events.destroy))
 
 
@@ -245,6 +251,9 @@ class XdgToplevel(Ptr):
         """
         self._ptr = ptr
 
+        self.destroy_event = Signal(
+            ptr=ffi.addressof(self._ptr.events.destroy)
+        )
         self.request_maximize_event = Signal(
             ptr=ffi.addressof(self._ptr.events.request_maximize)
         )
@@ -368,6 +377,7 @@ class XdgPopup(Ptr):
         """
         self._ptr = ffi.cast("struct wlr_xdg_popup *", ptr)
 
+        self.destroy_event = Signal(ptr=ffi.addressof(self._ptr.events.destroy))
         self.reposition_event = Signal(ptr=ffi.addressof(self._ptr.events.reposition))
 
     @property

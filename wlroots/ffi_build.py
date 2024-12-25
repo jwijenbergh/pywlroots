@@ -125,7 +125,7 @@ struct wlr_backend
     ...;
 };
 
-struct wlr_backend *wlr_backend_autocreate(struct wl_display *display,
+struct wlr_backend *wlr_backend_autocreate(struct wl_event_loop *loop,
     struct wlr_session **session_ptr);
 
 bool wlr_backend_start(struct wlr_backend *backend);
@@ -2962,7 +2962,7 @@ void wlr_region_transform(struct pixman_region32 *dst, struct pixman_region32 *s
 
 # backend/headless.h
 CDEF += """
-struct wlr_backend *wlr_headless_backend_create(struct wl_display *display);
+struct wlr_backend *wlr_headless_backend_create(struct wl_event_loop *loop);
 
 struct wlr_output *wlr_headless_add_output(struct wlr_backend *backend,
     unsigned int width, unsigned int height);

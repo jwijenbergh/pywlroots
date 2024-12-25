@@ -851,7 +851,6 @@ enum wlr_input_device_type {
 
 struct wlr_input_device {
     enum wlr_input_device_type type;
-    unsigned int vendor, product;
     char *name;
 
     struct {

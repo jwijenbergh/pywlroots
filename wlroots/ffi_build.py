@@ -2127,7 +2127,7 @@ void wlr_seat_touch_send_up(struct wlr_seat *seat, uint32_t time_msec,
         int32_t touch_id);
 void wlr_seat_touch_send_motion(struct wlr_seat *seat, uint32_t time_msec,
         int32_t touch_id, double sx, double sy);
-void wlr_seat_touch_send_cancel(struct wlr_seat *seat, struct wlr_surface *surface);
+void wlr_seat_touch_send_cancel(struct wlr_seat *seat, struct wlr_seat_client *seat_client);
 void wlr_seat_touch_send_frame(struct wlr_seat *seat);
 uint32_t wlr_seat_touch_notify_down(struct wlr_seat *seat,
         struct wlr_surface *surface, uint32_t time_msec,
@@ -2137,7 +2137,7 @@ void wlr_seat_touch_notify_up(struct wlr_seat *seat, uint32_t time_msec,
 void wlr_seat_touch_notify_motion(struct wlr_seat *seat, uint32_t time_msec,
         int32_t touch_id, double sx, double sy);
 void wlr_seat_touch_notify_cancel(struct wlr_seat *seat,
-        struct wlr_surface *surface);
+        struct wlr_surface *surface, struct wlr_seat_client *seat_client);
 void wlr_seat_touch_notify_frame(struct wlr_seat *seat);
 int wlr_seat_touch_num_points(struct wlr_seat *seat);
 void wlr_seat_touch_start_grab(struct wlr_seat *wlr_seat,

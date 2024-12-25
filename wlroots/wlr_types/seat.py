@@ -34,6 +34,11 @@ class KeyboardGrab(Ptr):
         lib.wlr_seat_keyboard_end_grab(self._seat._ptr)
 
 
+class Client(Ptr):
+    def __init__(self, ptr):
+        self._ptr = ptr
+
+
 class Seat(PtrHasData):
     def __init__(self, display: Display, name: str) -> None:
         """Allocates a new seat and adds a seat global to the display
@@ -314,14 +319,14 @@ class Seat(PtrHasData):
             self._ptr, time_msec, touch_id, surface_x, surface_y
         )
 
-    def touch_send_cancel(self, surface: Surface) -> None:
+    def touch_send_cancel(self, seat_client: Client) -> None:
         """
         Notify the seat that this is a global gesture and the client should cancel
         processing it. The event will go to the client for the surface given.
         This function does not respect touch grabs: you probably want
         `touch_notify_cancel()` instead.
         """
-        lib.wlr_seat_touch_send_cancel(self._ptr, surface._ptr)
+        lib.wlr_seat_touch_send_cancel(self._ptr, seat_client._ptr)
 
     def touch_send_frame(self) -> None:
         lib.wlr_seat_touch_send_frame(self._ptr)
@@ -387,10 +392,10 @@ class Seat(PtrHasData):
         """Clear the focused surface for the touch point given by `touch_id`."""
         lib.wlr_seat_touch_point_clear_focus(self._ptr, time_msec, touch_id)
 
-    def touch_notify_cancel(self, surface: Surface):
+    def touch_notify_cancel(self, surface: Surface, client: Client):
         """Notify the seat that this is a global gesture and the client should
         cancel processing it. Defers to any grab of the touch device."""
-        lib.wlr_seat_touch_notify_cancel(self._ptr, surface._ptr)
+        lib.wlr_seat_touch_notify_cancel(self._ptr, surface._ptr, client._ptr)
 
     def touch_notify_frame(self) -> None:
         lib.wlr_seat_touch_notify_frame(self._ptr)

@@ -45,18 +45,11 @@ class Renderer(Ptr):
     def render(self, width: int, height: int) -> Iterator[Renderer]:
         """Render within the generated context"""
         self.begin(width, height)
-        try:
-            yield self
-        finally:
-            self.end()
+        yield self
 
     def begin(self, width: int, height: int) -> bool:
         """Begin rendering with the given height and width"""
         return lib.wlr_renderer_begin(self._ptr, width, height)
-
-    def end(self):
-        """Finish rendering"""
-        lib.wlr_renderer_end(self._ptr)
 
     def clear(self, color: ColorType) -> None:
         """Clear the renderer to the given RGBA color"""

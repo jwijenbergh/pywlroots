@@ -118,10 +118,6 @@ class LayerSurfaceV1(PtrHasData):
         self._ptr.output = output._ptr
 
     @property
-    def added(self) -> bool:
-        return self._ptr.added
-
-    @property
     def configured(self) -> bool:
         return self._ptr.configured
 

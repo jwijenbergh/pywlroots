@@ -1510,6 +1510,7 @@ struct wlr_pointer_constraint_v1_state {
     uint32_t committed; // enum wlr_pointer_constraint_v1_state_field
     struct pixman_region32 region;
     struct {
+        bool enabled;
         double x, y;
     } cursor_hint;
     ...;

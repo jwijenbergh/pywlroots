@@ -387,7 +387,6 @@ struct wlr_surface {
     struct wlr_renderer *renderer;
     struct wlr_client_buffer *buffer;
     struct pixman_region32 buffer_damage;
-    struct pixman_region32 external_damage;
     struct pixman_region32 opaque_region;
     struct pixman_region32 input_region;
     struct wlr_surface_state current, pending;
@@ -478,7 +477,6 @@ struct wlr_subsurface {
     bool has_cache;
 
     bool synchronized;
-    bool reordered;
     bool added;
 
     struct wl_listener surface_client_commit;

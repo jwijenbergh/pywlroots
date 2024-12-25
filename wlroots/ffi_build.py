@@ -1085,8 +1085,6 @@ struct wlr_output {
     bool frame_pending;
     bool non_desktop;
 
-    struct wlr_output_state pending;
-
     // Commit sequence number. Incremented on each commit, may overflow.
     uint32_t commit_seq;
 
@@ -1128,7 +1126,6 @@ struct wlr_output_event_request_state {
     ...;
 };
 
-void wlr_output_enable(struct wlr_output *output, bool enable);
 void wlr_output_create_global(struct wlr_output *output, struct wl_display *display);
 void wlr_output_destroy_global(struct wlr_output *output);
 
@@ -1137,25 +1134,11 @@ bool wlr_output_init_render(struct wlr_output *output,
 
 struct wlr_output_mode *wlr_output_preferred_mode(struct wlr_output *output);
 
-void wlr_output_set_mode(struct wlr_output *output,
-    struct wlr_output_mode *mode);
-void wlr_output_set_custom_mode(struct wlr_output *output, int32_t width,
-    int32_t height, int32_t refresh);
-void wlr_output_set_transform(struct wlr_output *output,
-    enum wl_output_transform transform);
-void wlr_output_enable_adaptive_sync(struct wlr_output *output, bool enabled);
-void wlr_output_set_scale(struct wlr_output *output, float scale);
-
 bool wlr_output_attach_render(struct wlr_output *output, int *buffer_age);
 void wlr_output_transformed_resolution(struct wlr_output *output,
     int *width, int *height);
 void wlr_output_effective_resolution(struct wlr_output *output,
     int *width, int *height);
-void wlr_output_set_damage(struct wlr_output *output,
-    struct pixman_region32 *damage);
-bool wlr_output_test(struct wlr_output *output);
-bool wlr_output_commit(struct wlr_output *output);
-void wlr_output_rollback(struct wlr_output *output);
 bool wlr_output_test_state(struct wlr_output *output,
     const struct wlr_output_state *state);
 bool wlr_output_commit_state(struct wlr_output *output,

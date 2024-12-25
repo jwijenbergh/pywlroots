@@ -2,6 +2,7 @@
 # Copyright (c) 2022 Aakash Sen Sharma
 
 import importlib.util
+import os
 import sys
 from pathlib import Path
 
@@ -10,6 +11,7 @@ from pywayland.ffi_build import ffi_builder as pywayland_ffi
 from xkbcommon.ffi_build import ffibuilder as xkb_ffi
 
 include_dir = (Path(__file__).parent / "include").resolve()
+wlroots_include_dir = os.getenv("PYWLROOTS_WLROOTS_PATH", "/usr/include/wlroots")
 assert include_dir.is_dir(), f"missing {include_dir}"
 
 
@@ -33,7 +35,12 @@ def load_wlroots_version():
     ffi.cdef(CDEF_VERSION)
 
     try:
-        lib = ffi.verify("#include <wlr/version.h>")
+        lib = ffi.verify(
+            "#include <wlr/version.h>",
+            include_dirs=[
+                wlroots_include_dir,
+            ],
+        )
     except (PermissionError, OSError, VerificationError):
         lib = importlib.import_module("wlroots").lib
 
@@ -77,7 +84,11 @@ def has_xwayland() -> bool:
         FFI().verify(
             "#include <wlr/xwayland.h>",
             define_macros=[("WLR_USE_UNSTABLE", 1)],
-            include_dirs=["/usr/include/pixman-1", include_dir.as_posix()],
+            include_dirs=[
+                "/usr/include/pixman-1",
+                include_dir.as_posix(),
+                wlroots_include_dir,
+            ],
         )
         has_xwayland = True
     except VerificationError:
@@ -3380,7 +3391,7 @@ ffi_builder.set_source(
     SOURCE,
     libraries=["wlroots"],
     define_macros=[("WLR_USE_UNSTABLE", None)],
-    include_dirs=["/usr/include/pixman-1", include_dir],
+    include_dirs=["/usr/include/pixman-1", include_dir, wlroots_include_dir],
 )
 ffi_builder.include(pywayland_ffi)
 ffi_builder.include(xkb_ffi)

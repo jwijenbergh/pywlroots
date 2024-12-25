@@ -1130,7 +1130,7 @@ struct wlr_output_event_request_state {
 };
 
 void wlr_output_enable(struct wlr_output *output, bool enable);
-void wlr_output_create_global(struct wlr_output *output);
+void wlr_output_create_global(struct wlr_output *output, struct wl_display *display);
 void wlr_output_destroy_global(struct wlr_output *output);
 
 bool wlr_output_init_render(struct wlr_output *output,
@@ -1197,6 +1197,7 @@ enum wl_output_transform wlr_output_transform_compose(
 CDEF += """
 struct wlr_output_layout {
     struct wl_list outputs;
+    struct wl_display *display;
 
     struct {
         struct wl_signal add;
@@ -1207,7 +1208,7 @@ struct wlr_output_layout {
     void *data;
     ...;
 };
-struct wlr_output_layout *wlr_output_layout_create(void);
+struct wlr_output_layout *wlr_output_layout_create(struct wl_display *display);
 void wlr_output_layout_destroy(struct wlr_output_layout *layout);
 
 void wlr_output_layout_output_coords(struct wlr_output_layout *layout,

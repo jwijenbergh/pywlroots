@@ -400,7 +400,6 @@ struct wlr_surface {
 
     struct {
         struct wl_signal client_commit;
-        struct wl_signal precommit;
         struct wl_signal commit;
         struct wl_signal map;
         struct wl_signal unmap;

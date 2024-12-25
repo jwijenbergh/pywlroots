@@ -403,6 +403,8 @@ bool wlr_surface_set_role(struct wlr_surface *surface, const struct wlr_surface_
 
 bool wlr_surface_has_buffer(struct wlr_surface *surface);
 
+bool wlr_surface_state_has_buffer(const struct wlr_surface_state *state);
+
 struct wlr_texture *wlr_surface_get_texture(struct wlr_surface *surface);
 
 struct wlr_surface *wlr_surface_get_root_surface(struct wlr_surface *surface);

@@ -1083,7 +1083,6 @@ struct wlr_output {
 
     bool needs_frame;
     bool frame_pending;
-    float transform_matrix[9];
     bool non_desktop;
 
     struct wlr_output_state pending;

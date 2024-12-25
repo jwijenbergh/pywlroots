@@ -297,14 +297,14 @@ class Seat(PtrHasData):
             self._ptr, surface._ptr, time_msec, touch_id, surface_x, surface_y
         )
 
-    def touch_send_up(self, time_msec: int, touch_id: int) -> None:
+    def touch_send_up(self, time_msec: int, touch_id: int) -> int:
         """
         Send a touch up event for the touch point given by the `touch_id`. The event
         will go to the client for the surface given in the corresponding touch down
         event. This will remove the touch point. This function does not respect touch
         grabs: you probably want `touch_notify_up()` instead.
         """
-        lib.wlr_seat_touch_send_up(self._ptr, time_msec, touch_id)
+        return lib.wlr_seat_touch_send_up(self._ptr, time_msec, touch_id)
 
     def touch_send_motion(
         self, time_msec: int, touch_id: int, surface_x: float, surface_y: float
@@ -349,12 +349,12 @@ class Seat(PtrHasData):
             self._ptr, surface._ptr, time_msec, touch_id, surface_x, surface_y
         )
 
-    def touch_notify_up(self, time_msec: int, touch_id: int) -> None:
+    def touch_notify_up(self, time_msec: int, touch_id: int) -> int:
         """
         Notify the seat that the touch point given by `touch_id` is up. Defers to any
         grab of the touch device.
         """
-        lib.wlr_seat_touch_notify_up(self._ptr, time_msec, touch_id)
+        return lib.wlr_seat_touch_notify_up(self._ptr, time_msec, touch_id)
 
     def touch_notify_motion(
         self, time_msec: int, touch_id: int, surface_x: float, surface_y: float

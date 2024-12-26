@@ -392,10 +392,10 @@ class Seat(PtrHasData):
         """Clear the focused surface for the touch point given by `touch_id`."""
         lib.wlr_seat_touch_point_clear_focus(self._ptr, time_msec, touch_id)
 
-    def touch_notify_cancel(self, surface: Surface, client: Client):
+    def touch_notify_cancel(self, client: Client):
         """Notify the seat that this is a global gesture and the client should
         cancel processing it. Defers to any grab of the touch device."""
-        lib.wlr_seat_touch_notify_cancel(self._ptr, surface._ptr, client._ptr)
+        lib.wlr_seat_touch_notify_cancel(self._ptr, client._ptr)
 
     def touch_notify_frame(self) -> None:
         lib.wlr_seat_touch_notify_frame(self._ptr)

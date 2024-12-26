@@ -29,11 +29,6 @@ class Output(PtrHasData):
         The `frame` event will be emitted when it is a good time for the
         compositor to submit a new frame.
 
-        To render a new frame, compositors should call
-        `wlr_output_attach_render`, render and call `wlr_output_commit`. No
-        rendering should happen outside a `frame` event handler or before
-        `wlr_output_attach_render`.
-
         :param ptr:
             The wlr_output cdata pointer
         """
@@ -132,7 +127,7 @@ class Output(PtrHasData):
 
         Can only be called once.
 
-        Call this function prior to any call to `attach_render`, `commit`, or
+        Call this function prior to any call to `commit`, or
         `cursor_create`. The buffer capabilities of the provided must match the
         capabilities of the output's backend.  Raises error otherwise.
         """
@@ -140,15 +135,6 @@ class Output(PtrHasData):
             raise RuntimeError(
                 "Output capabilities must match the capabilities of the output's backend."
             )
-
-    def attach_render(self) -> None:
-        """Attach the renderer's buffer to the output
-
-        Compositors must call this function before rendering. After they are
-        done rendering, they should call `.commit()` to submit the new frame.
-        """
-        if not lib.wlr_output_attach_render(self._ptr, ffi.NULL):
-            raise RuntimeError("Unable to attach render")
 
     def commit(self, output_state: OutputState) -> bool:
         """Commit the pending output state
@@ -175,13 +161,6 @@ class Output(PtrHasData):
         width = width_ptr[0]
         height = height_ptr[0]
         return width, height
-
-    def render_software_cursors(self, damage: PixmanRegion32 | None = None) -> None:
-        """Renders software cursors
-
-        This is a utility function that can be called when compositors render.
-        """
-        lib.wlr_output_render_software_cursors(self._ptr, ptr_or_null(damage))
 
     @staticmethod
     def transform_invert(transform: WlOutput.transform) -> WlOutput.transform:

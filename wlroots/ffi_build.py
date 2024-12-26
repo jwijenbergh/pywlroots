@@ -367,7 +367,7 @@ struct wlr_surface_output {
 
 struct wlr_surface {
     struct wl_resource *resource;
-    struct wlr_renderer *renderer;
+    struct wlr_compositor *compositor;
     struct wlr_client_buffer *buffer;
     struct pixman_region32 buffer_damage;
     struct pixman_region32 opaque_region;
@@ -996,7 +996,7 @@ struct wlr_output {
     int32_t phys_width, phys_height; // mm
 
     // Note: some backends may have zero modes
-    struct wl_list modes; // wlr_output_mode::link
+    struct wl_list modes; // wlr_output_mode.link
     struct wlr_output_mode *current_mode;
     int32_t width, height;
     int32_t refresh; // mHz, may be zero
@@ -1008,39 +1008,63 @@ struct wlr_output {
     enum wlr_output_adaptive_sync_status adaptive_sync_status;
     uint32_t render_format;
 
+    // Indicates whether making changes to adaptive sync status is supported.
+    // If false, changes to adaptive sync status is guaranteed to fail. If
+    // true, changes may either succeed or fail.
+    bool adaptive_sync_supported;
+
     bool needs_frame;
+    // damage for cursors and fullscreen surface, in output-local coordinates
     bool frame_pending;
+
+    // true for example with VR headsets
     bool non_desktop;
 
     // Commit sequence number. Incremented on each commit, may overflow.
     uint32_t commit_seq;
 
     struct {
+        // Request to render a frame
         struct wl_signal frame;
-        struct wl_signal damage;
+        // Emitted when software cursors or backend-specific logic damage the
+        // output
+        struct wl_signal damage; // struct wlr_output_event_damage
+        // Emitted when a new frame needs to be committed (because of
+        // backend-specific logic)
         struct wl_signal needs_frame;
-        struct wl_signal precommit;
-        struct wl_signal commit;
-        struct wl_signal present;
-        struct wl_signal bind;
+        // Emitted right before commit
+        struct wl_signal precommit; // struct wlr_output_event_precommit
+        // Emitted right after commit
+        struct wl_signal commit; // struct wlr_output_event_commit
+        // Emitted right after a commit has been presented to the user for
+        // enabled outputs
+        struct wl_signal present; // struct wlr_output_event_present
+        // Emitted after a client bound the wl_output global
+        struct wl_signal bind; // struct wlr_output_event_bind
         struct wl_signal description;
-        struct wl_signal request_state;
+        struct wl_signal request_state; // struct wlr_output_event_request_state
         struct wl_signal destroy;
     } events;
 
     struct wl_event_source *idle_frame;
     struct wl_event_source *idle_done;
-    int attach_render_locks;
-    struct wl_list cursors;
+
+    int attach_render_locks; // number of locks forcing rendering
+
+    struct wl_list cursors; // wlr_output_cursor.link
     struct wlr_output_cursor *hardware_cursor;
     struct wlr_swapchain *cursor_swapchain;
     struct wlr_buffer *cursor_front_buffer;
-    int software_cursor_locks;
+    int software_cursor_locks; // number of locks forcing software cursors
+
+    struct wl_list layers; // wlr_output_layer.link
+
     struct wlr_allocator *allocator;
     struct wlr_renderer *renderer;
     struct wlr_swapchain *swapchain;
-    struct wlr_buffer *back_buffer;
+
     struct wl_listener display_destroy;
+
     struct wlr_addon_set addons;
 
     void *data;
@@ -1061,7 +1085,6 @@ bool wlr_output_init_render(struct wlr_output *output,
 
 struct wlr_output_mode *wlr_output_preferred_mode(struct wlr_output *output);
 
-bool wlr_output_attach_render(struct wlr_output *output, int *buffer_age);
 void wlr_output_transformed_resolution(struct wlr_output *output,
     int *width, int *height);
 void wlr_output_effective_resolution(struct wlr_output *output,
@@ -1088,9 +1111,6 @@ void wlr_output_state_set_render_format(struct wlr_output_state *state,
     uint32_t format);
 void wlr_output_state_set_subpixel(struct wlr_output_state *state,
     enum wl_output_subpixel subpixel);
-
-void wlr_output_render_software_cursors(struct wlr_output *output,
-    struct pixman_region32 *damage);
 """
 
 # util/transform.h
@@ -2080,8 +2100,7 @@ uint32_t wlr_seat_touch_notify_up(struct wlr_seat *seat, uint32_t time_msec,
         int32_t touch_id);
 void wlr_seat_touch_notify_motion(struct wlr_seat *seat, uint32_t time_msec,
         int32_t touch_id, double sx, double sy);
-void wlr_seat_touch_notify_cancel(struct wlr_seat *seat,
-        struct wlr_surface *surface, struct wlr_seat_client *seat_client);
+void wlr_seat_touch_notify_cancel(struct wlr_seat *seat, struct wlr_seat_client *seat_client);
 void wlr_seat_touch_notify_frame(struct wlr_seat *seat);
 int wlr_seat_touch_num_points(struct wlr_seat *seat);
 void wlr_seat_touch_start_grab(struct wlr_seat *wlr_seat,
@@ -2482,7 +2501,6 @@ struct wlr_xdg_toplevel_decoration_v1 {
     struct wl_listener toplevel_destroy;
     struct wl_listener surface_configure;
     struct wl_listener surface_ack_configure;
-    struct wl_listener surface_commit;
 
     void *data;
     ...;
